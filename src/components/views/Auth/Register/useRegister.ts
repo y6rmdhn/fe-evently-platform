@@ -1,4 +1,4 @@
-import authServices from "@/services/auth";
+import authServices from "@/services/auth.service";
 import { IRegister } from "@/types/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";

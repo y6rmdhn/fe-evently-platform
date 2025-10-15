@@ -27,7 +27,7 @@ const Register = () => {
 
   console.log(errors);
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-20 lg:flex-row lg:gap-20">
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-20 lg:flex-row lg:gap-20">
       <div className="flex w-1/3 flex-col items-center justify-center gap-6">
         <Image
           src="/images/general/evently-logo.png"
@@ -38,8 +38,8 @@ const Register = () => {
         <Image
           src="/images/illustrations/register.svg"
           alt="login"
-          width={450}
-          height={450}
+          width={430}
+          height={430}
         />
       </div>
 
