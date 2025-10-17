@@ -48,7 +48,9 @@ const DasboardLayoutSidebar = (props: PropsType) => {
             <ListboxItem
               key={item.key}
               className={cn("my-1 h-12 text-2xl", {
-                "bg-[#006DE6] text-white": item.href === router.pathname,
+                "bg-[#006DE6] text-white": router.pathname.startsWith(
+                  item.href,
+                ),
               })}
               startContent={item.icon}
               textValue={item.label}
