@@ -11,7 +11,7 @@ const SIDEBAR_ADMIN = [
   {
     key: "dasboard",
     label: "Dasboard",
-    href: "/admin",
+    href: "/admin/dasboard",
     icon: <CiGrid41 />,
   },
   {
@@ -44,7 +44,7 @@ const SIDEBAR_MEMBER = [
   {
     key: "dasboard",
     label: "Dasboard",
-    href: "/member",
+    href: "/member/dasboard",
     icon: <CiGrid41 />,
   },
   {

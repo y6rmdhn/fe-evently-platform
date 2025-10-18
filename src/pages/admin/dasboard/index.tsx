@@ -1,7 +1,7 @@
 import DasboardLayout from "@/components/layouts/DasboardLayout";
 import Dasboard from "@/components/views/Admin/Dasboard";
 
-const DasboardAdminPage = () => {
+const AdminDasboardPage = () => {
   return (
     <DasboardLayout title="Dasboard" type="admin" desc="Dasboard Admin">
       <Dasboard />
@@ -9,4 +9,4 @@ const DasboardAdminPage = () => {
   );
 };
 
-export default DasboardAdminPage;
+export default AdminDasboardPage;
