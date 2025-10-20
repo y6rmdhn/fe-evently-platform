@@ -65,7 +65,7 @@ const DataTable = (props: PropsType) => {
         />
         {topButtonContentLabel && (
           <Button color="primary" onPress={onClickButtonTopContent}>
-            Search
+            Create Category
           </Button>
         )}
       </div>
