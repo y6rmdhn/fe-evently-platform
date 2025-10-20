@@ -61,6 +61,7 @@ const DataTable = (props: PropsType) => {
           placeholder="Search by name"
           startContent={<CiSearch />}
           onClear={onClearSearch}
+          onChange={onChangeSearch}
         />
         {topButtonContentLabel && (
           <Button color="primary" onPress={onClickButtonTopContent}>
@@ -86,20 +87,24 @@ const DataTable = (props: PropsType) => {
           selectionMode="single"
           onChange={onChangeLimit}
           startContent={<p className="text-sm">Show:</p>}
+          disallowEmptySelection
         >
           {LIMIT_LIST.map((item) => (
             <SelectItem key={item.value}>{item.label}</SelectItem>
           ))}
         </Select>
 
-        <Pagination
-          isCompact
-          showControls
-          color="primary"
-          page={currentPage}
-          total={totalPages}
-          onChange={onChangePage}
-        />
+        {totalPages > 1 && (
+          <Pagination
+            isCompact
+            showControls
+            color="primary"
+            page={currentPage}
+            total={totalPages}
+            onChange={onChangePage}
+            loop
+          />
+        )}
       </div>
     );
   }, [limit, currentPage, totalPages, onChangeLimit, onChangePage]);

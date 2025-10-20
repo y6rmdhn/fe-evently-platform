@@ -8,23 +8,36 @@ import {
 } from "@heroui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { Key, ReactNode, useCallback } from "react";
+import React, { Key, ReactNode, useCallback, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.constant";
-import { LIMIT_LIST } from "@/components/constants/list.constant";
+import useCategory from "./useCategory";
 
 const Category = () => {
-  const { push } = useRouter();
+  const { push, query, isReady } = useRouter();
+  const {
+    setURL,
+    dataCategory,
+    isLoadingCategory,
+    isRefetchingCategory,
+    currentLimit,
+    currentPage,
+    currentSearch,
+    handleChangeLimit,
+    handleChangePage,
+    handleClearSearch,
+    handleSearch,
+  } = useCategory();
 
   const renderCell = useCallback(
     (category: Record<string, unknown>, columnKey: Key) => {
       const cellvalue = category[columnKey as keyof typeof category];
 
       switch (columnKey) {
-        case "icon":
-          return (
-            <Image src={`${cellvalue}`} alt="icon" width={100} height={200} />
-          );
+        // case "icon":
+        //   return (
+        //     <Image src={`${cellvalue}`} alt="icon" width={100} height={200} />
+        //   );
         case "actions":
           return (
             <Dropdown>
@@ -57,30 +70,32 @@ const Category = () => {
     [push],
   );
 
+  useEffect(() => {
+    if (isReady) {
+      setURL();
+    }
+  }, [isReady]);
+
   return (
     <section>
-      <DataTable
-        onChangeSearch={() => {}}
-        onClearSearch={() => {}}
-        topButtonContentLabel="Create Category"
-        onClickButtonTopContent={() => {}}
-        renderCell={renderCell}
-        columns={COLUMN_LIST_CATEGORY}
-        limit={LIMIT_LIST[0].label}
-        onChangeLimit={() => {}}
-        currentPage={1}
-        onChangePage={() => {}}
-        totalPages={2}
-        emptyContent="Content is empty"
-        data={[
-          {
-            _id: "123",
-            name: "Category 1",
-            description: "Desc Category 1",
-            icon: "/images/general/evently-logo.png",
-          },
-        ]}
-      />
+      {Object.keys(query).length > 0 && (
+        <DataTable
+          onChangeSearch={handleSearch}
+          onClearSearch={handleClearSearch}
+          topButtonContentLabel="Create Category"
+          onClickButtonTopContent={() => {}}
+          renderCell={renderCell}
+          columns={COLUMN_LIST_CATEGORY}
+          limit={String(currentLimit)}
+          onChangeLimit={handleChangeLimit}
+          currentPage={Number(currentPage)}
+          onChangePage={handleChangePage}
+          totalPages={dataCategory?.pagination.totalPages}
+          emptyContent="Content is empty"
+          isLoading={isLoadingCategory || isRefetchingCategory}
+          data={dataCategory?.data || []}
+        />
+      )}
     </section>
   );
 };
