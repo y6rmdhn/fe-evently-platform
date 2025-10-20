@@ -12,6 +12,7 @@ import React, { Key, ReactNode, useCallback, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.constant";
 import useCategory from "./useCategory";
+import InputFile from "@/components/ui/InputFile";
 
 const Category = () => {
   const { push, query, isReady } = useRouter();
@@ -96,6 +97,8 @@ const Category = () => {
           data={dataCategory?.data || []}
         />
       )}
+
+      <InputFile name="tes" isDropable />
     </section>
   );
 };
