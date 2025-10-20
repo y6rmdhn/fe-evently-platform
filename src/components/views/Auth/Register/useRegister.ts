@@ -1,5 +1,6 @@
 import authServices from "@/services/auth.service";
 import { IRegister } from "@/types/auth";
+import { addToast } from "@heroui/toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -57,13 +58,24 @@ const useRegister = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: registerService,
     onError(error) {
-      setError("root", {
-        message: error.message,
+      addToast({
+        title: error.message,
+        color: "danger",
+        variant: "bordered",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
       });
     },
     onSuccess: () => {
-      router.push("/auth/register/success");
       reset();
+      addToast({
+        title: "Login Successful",
+        color: "success",
+        variant: "bordered",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
+      router.push("/auth/register/success");
     },
   });
 

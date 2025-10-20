@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { HeroUIProvider } from "@heroui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
+import { ToastProvider } from "@heroui/toast";
 import type { AppProps } from "next/app";
 
 const queryClient = new QueryClient({
@@ -22,6 +23,7 @@ export default function App({
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
           <Component {...pageProps} />
+          <ToastProvider placement="top-right" />
         </HeroUIProvider>
       </QueryClientProvider>
     </SessionProvider>
