@@ -1,7 +1,6 @@
 import { LIMIT_LIST } from "@/components/constants/list.constant";
 import { cn } from "@/utils/cn";
 import {
-  addToast,
   Button,
   Input,
   Pagination,
@@ -65,18 +64,7 @@ const DataTable = (props: PropsType) => {
           onChange={onChangeSearch}
         />
         {topButtonContentLabel && (
-          <Button
-            color="primary"
-            onPress={() => {
-              onClickButtonTopContent;
-              addToast({
-                title: "Toast Title",
-                description: "Toast Description",
-                timeout: 3000,
-                shouldShowTimeoutProgress: true,
-              });
-            }}
-          >
+          <Button color="primary" onPress={onClickButtonTopContent}>
             Create Category
           </Button>
         )}

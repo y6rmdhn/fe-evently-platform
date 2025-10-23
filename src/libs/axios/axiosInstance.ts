@@ -3,13 +3,13 @@ import { SessionExtended } from "@/types/auth";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
-const headers = {
-  "Content-type": "application/json",
-};
+// const headers = {
+//   "Content-type": "application/json",
+// };
 
 const axiosInstance = axios.create({
   baseURL: environment.API_URL,
-  headers,
+  // headers,
   timeout: 60 * 1000,
 });
 

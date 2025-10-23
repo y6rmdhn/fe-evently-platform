@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
 } from "@heroui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -12,10 +13,11 @@ import React, { Key, ReactNode, useCallback, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.constant";
 import useCategory from "./useCategory";
-import InputFile from "@/components/ui/InputFile";
+import AddCategoryModal from "./AddCategoryModal";
 
 const Category = () => {
   const { push, query, isReady } = useRouter();
+  const addCategoryModal = useDisclosure();
   const {
     setURL,
     dataCategory,
@@ -28,6 +30,7 @@ const Category = () => {
     handleChangePage,
     handleClearSearch,
     handleSearch,
+    refetchCategory,
   } = useCategory();
 
   const renderCell = useCallback(
@@ -84,7 +87,7 @@ const Category = () => {
           onChangeSearch={handleSearch}
           onClearSearch={handleClearSearch}
           topButtonContentLabel="Create Category"
-          onClickButtonTopContent={() => {}}
+          onClickButtonTopContent={addCategoryModal.onOpen}
           renderCell={renderCell}
           columns={COLUMN_LIST_CATEGORY}
           limit={String(currentLimit)}
@@ -97,8 +100,10 @@ const Category = () => {
           data={dataCategory?.data || []}
         />
       )}
-
-      <InputFile name="tes" isDropable />
+      <AddCategoryModal
+        {...addCategoryModal}
+        refetchCategory={refetchCategory}
+      />
     </section>
   );
 };
