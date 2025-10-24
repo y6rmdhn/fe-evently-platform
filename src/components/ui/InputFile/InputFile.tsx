@@ -102,7 +102,7 @@ const InputFile = (props: PropsType) => {
           </div>
         )}
 
-        {!preview && isUploading && (
+        {!preview && (
           <div className="flex flex-col items-center justify-center p-5">
             <CiSaveUp2 className="mb-2 h-10 w-10 text-gray-400" />
             <p className="text-center text-sm font-semibold text-gray-500">
@@ -115,7 +115,7 @@ const InputFile = (props: PropsType) => {
 
         {isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
-            <Spinner size="md" color="white" />
+            <Spinner size="md" color="primary" />
           </div>
         )}
 
