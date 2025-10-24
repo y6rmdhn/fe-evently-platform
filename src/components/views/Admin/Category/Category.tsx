@@ -25,7 +25,6 @@ const Category = () => {
     isRefetchingCategory,
     currentLimit,
     currentPage,
-    currentSearch,
     handleChangeLimit,
     handleChangePage,
     handleClearSearch,
