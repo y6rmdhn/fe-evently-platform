@@ -1,27 +1,34 @@
 import { cn } from "@/utils/cn";
-import { div } from "framer-motion/client";
+import { Button, Spinner } from "@heroui/react";
 import Image from "next/image";
-import React, { ChangeEvent, useEffect, useId, useRef, useState } from "react";
-import { CiSaveUp2 } from "react-icons/ci";
+import React, { ChangeEvent, useEffect, useId, useRef } from "react";
+import { CiSaveUp2, CiTrash } from "react-icons/ci";
 
 interface PropsType {
   name: string;
   isDropable?: boolean;
   className?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onUpload?: (file: FileList) => void;
+  onDelete?: () => void;
+  preview?: string;
   isInvalid?: boolean;
+  isUploading?: boolean;
+  isDeleting?: boolean;
   errorMessage?: string;
 }
 
 const InputFile = (props: PropsType) => {
-  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const {
     name,
     className,
     isDropable = false,
     errorMessage,
     isInvalid,
-    onChange,
+    onUpload,
+    onDelete,
+    preview,
+    isDeleting,
+    isUploading,
   } = props;
   const drop = useRef<HTMLLabelElement>(null);
   const dropZoneId = useId();
@@ -35,17 +42,18 @@ const InputFile = (props: PropsType) => {
 
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
-    setUploadedImage(e.dataTransfer?.files?.[0] || null);
+
+    const files = e.dataTransfer?.files;
+
+    if (files && onUpload) {
+      onUpload(files);
+    }
   };
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.currentTarget.files;
-    if (files && files.length > 0) {
-      setUploadedImage(files[0]);
-    }
-
-    if (onChange) {
-      onChange(e);
+    if (files && onUpload) {
+      onUpload(files);
     }
   };
 
@@ -74,21 +82,27 @@ const InputFile = (props: PropsType) => {
           { "border-danger-500": isInvalid },
         )}
       >
-        {uploadedImage ? (
-          <div className="flex flex-col items-center justify-center p-5">
+        {preview && (
+          <div className="relative flex flex-col items-center justify-center p-5">
             <div className="mb-2 w-1/2">
-              <Image
-                fill
-                src={URL.createObjectURL(uploadedImage)}
-                alt="image"
-                className="!relative"
-              />
+              <Image fill src={preview} alt="image" className="!relative" />
             </div>
-            <p className="text-center text-sm font-semibold text-gray-500">
-              {uploadedImage.name}
-            </p>
+            <Button
+              isIconOnly
+              onPress={onDelete}
+              disabled={isDeleting}
+              className="bg-primary-100 absolute top-2 right-2 flex h-9 w-9 items-center justify-center rounded"
+            >
+              {isDeleting ? (
+                <Spinner size="sm" color="white" />
+              ) : (
+                <CiTrash className="text-danger-500 h-5 w-5" />
+              )}
+            </Button>
           </div>
-        ) : (
+        )}
+
+        {!preview && isUploading && (
           <div className="flex flex-col items-center justify-center p-5">
             <CiSaveUp2 className="mb-2 h-10 w-10 text-gray-400" />
             <p className="text-center text-sm font-semibold text-gray-500">
@@ -98,13 +112,25 @@ const InputFile = (props: PropsType) => {
             </p>
           </div>
         )}
+
+        {isUploading && (
+          <div className="flex flex-col items-center justify-center p-5">
+            <Spinner size="md" color="white" />
+          </div>
+        )}
+
         <input
           name={name}
           type="file"
           className="hidden"
           accept="image/*"
           id={`dropzone-file-${dropZoneId}`}
-          onChange={handleOnChange}
+          onChange={handleOnUpload}
+          disabled={preview !== ""}
+          onClick={(e) => {
+            e.currentTarget.value = "";
+            e.target.dispatchEvent(new Event("change", { bubbles: true }));
+          }}
         />
       </label>
 
