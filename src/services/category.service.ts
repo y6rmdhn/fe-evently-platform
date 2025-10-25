@@ -7,6 +7,8 @@ const categoryServices = {
     axiosInstance.get(`${endpoint.CATEGORY}?${params}`),
   AddCategory: (payload: ICategory) =>
     axiosInstance.post(`${endpoint.CATEGORY}`, payload),
+  deleteCategory: (id: string) =>
+    axiosInstance.delete(`${endpoint.CATEGORY}/${id}`),
 };
 
 export default categoryServices;
