@@ -5,6 +5,8 @@ import { ICategory } from "@/types/category";
 const categoryServices = {
   getCategories: (params?: string) =>
     axiosInstance.get(`${endpoint.CATEGORY}?${params}`),
+  getDetailCategory: (id: string) =>
+    axiosInstance.get(`${endpoint.CATEGORY}/${id}`),
   AddCategory: (payload: ICategory) =>
     axiosInstance.post(`${endpoint.CATEGORY}`, payload),
   deleteCategory: (id: string) =>

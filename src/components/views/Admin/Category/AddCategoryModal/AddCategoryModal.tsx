@@ -58,7 +58,7 @@ const AddCategoryModal = (props: PropsTypes) => {
         <ModalContent className="m-4">
           <ModalHeader>Add New Category</ModalHeader>
           <ModalBody>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               <p className="text-sm font-semibold">Information</p>
               <Controller
                 name="name"
@@ -104,6 +104,7 @@ const AddCategoryModal = (props: PropsTypes) => {
                     isInvalid={errors.icon !== undefined}
                     errorMessage={errors.icon?.message}
                     preview={typeof preview === "string" ? preview : ""}
+                    className="mb-2"
                   />
                 )}
               />

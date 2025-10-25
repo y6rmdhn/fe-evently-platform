@@ -116,6 +116,7 @@ const Login = () => {
             <Button
               type="submit"
               className="text-large bg-[#006DE6] font-medium text-white"
+              disabled={isPending}
             >
               {isPending ? <Spinner color="white" size="sm" /> : "Login"}
             </Button>
