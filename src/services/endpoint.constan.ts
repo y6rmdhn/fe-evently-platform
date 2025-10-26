@@ -2,7 +2,7 @@ const endpoint = {
   AUTH: "/auth",
   CATEGORY: "/category",
   MEDIA: "/media",
-  EVENT: "/event",
+  EVENT: "/events",
   REGIONS: "/regions",
 };
 

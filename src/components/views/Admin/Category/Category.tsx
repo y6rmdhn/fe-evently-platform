@@ -16,6 +16,7 @@ import useCategory from "./useCategory";
 import AddCategoryModal from "./AddCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal";
 import useChangeUrl from "@/hooks/useChangeUrl";
+import DropDownAction from "@/components/commons/DropDownAction";
 
 const Category = () => {
   const { push, query, isReady } = useRouter();
@@ -44,31 +45,15 @@ const Category = () => {
           );
         case "actions":
           return (
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <CiMenuKebab className="text-default-700" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  key="detail-category-button"
-                  onPress={() => push(`/admin/category/${category._id}`)}
-                >
-                  Detail Category
-                </DropdownItem>
-                <DropdownItem
-                  key="delete-category-button"
-                  className="text-danger-500"
-                  onPress={() => {
-                    setSelectedId(`${category._id}`);
-                    deleteCategoryModal.onOpen();
-                  }}
-                >
-                  Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <DropDownAction
+              onPressButtonDelete={() => {
+                setSelectedId(`${category._id}`);
+                deleteCategoryModal.onOpen();
+              }}
+              onPressButtonDetail={() =>
+                push(`/admin/category/${category._id}`)
+              }
+            />
           );
         default:
           return cellvalue as ReactNode;
