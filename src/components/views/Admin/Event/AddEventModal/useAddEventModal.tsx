@@ -3,10 +3,12 @@ import useDebounce from "@/hooks/useDebounce";
 import useMediaHandling from "@/hooks/useMediaHandling";
 import categoryServices from "@/services/category.service";
 import eventServices from "@/services/event.services";
-import { IEvent } from "@/types/event";
+import { IEvent, IEventForm } from "@/types/event";
+import { toDateStandart } from "@/utils/date";
 import { DateValue } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getLocalTimeZone, now } from "@internationalized/date";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -55,6 +57,9 @@ const useAddEventModal = () => {
 
   const preview = watch("banner");
   const fileUrl = getValues("banner");
+
+  setValue("startDate", now(getLocalTimeZone()));
+  setValue("endDate", now(getLocalTimeZone()));
 
   const handleUploadBanner = (
     files: FileList,
@@ -130,7 +135,25 @@ const useAddEventModal = () => {
     },
   });
 
-  const handleAddEvent = (data: IEvent) => mutateAddEvent(data);
+  const handleAddEvent = (data: IEventForm) => {
+    const payload = {
+      ...data,
+      isFeatured: Boolean(data.isFeatured),
+      isPublished: Boolean(data.isPublished),
+      isOnline: Boolean(data.isOnline),
+      startDate: toDateStandart(data.startDate),
+      endDate: toDateStandart(data.endDate),
+      location: {
+        region: data.region,
+        coordinates: [Number(data.latitude), Number(data.longitude)],
+      },
+      banner: data.banner,
+    };
+
+    mutateAddEvent(payload);
+  };
+
+  console.log(errors);
 
   return {
     control,
