@@ -8,6 +8,7 @@ import useEvent from "./useEvent";
 import { COLUMN_LIST_EVENT } from "./Event.constant";
 import DropDownAction from "@/components/commons/DropDownAction";
 import AddEventModal from "./AddEventModal";
+import DeleteEventModal from "./DeleteEventModal";
 
 const Event = () => {
   const { push, query, isReady } = useRouter();
@@ -55,7 +56,7 @@ const Event = () => {
               onPressButtonDetail={() => push(`/admin/event/${event._id}`)}
               onPressButtonDelete={() => {
                 setSelectedId(`${event._id}`);
-                // deleteEventModal.onOpen();
+                deleteEventModal.onOpen();
               }}
             />
           );
@@ -88,12 +89,12 @@ const Event = () => {
         />
       )}
       <AddEventModal {...addEventModal} refetchEvent={refetchEvent} />
-      {/* <DeleteCategoryModal
-        {...deleteCategoryModal}
+      <DeleteEventModal
+        {...deleteEventModal}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
-        refetchCategory={refetchEvent}
-      /> */}
+        refetchEvent={refetchEvent}
+      />
     </section>
   );
 };
