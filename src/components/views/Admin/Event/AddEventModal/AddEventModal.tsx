@@ -1,50 +1,61 @@
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
+  DatePicker,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Select,
+  SelectItem,
   Spinner,
   Textarea,
 } from "@heroui/react";
 import React, { useEffect } from "react";
-import useAddCategoryModal from "./useAddCategoryModal";
 import { Controller } from "react-hook-form";
 import InputFile from "@/components/ui/InputFile";
+import useAddEventModal from "./useAddEventModal";
+import { ICategory } from "@/types/category";
+import { IRegency } from "@/types/event";
 
 interface PropsTypes {
   isOpen: boolean;
   onClose: () => void;
-  refetchCategory: () => void;
+  refetchEvent: () => void;
   onOpenChange: () => void;
 }
 
 const AddEventModal = (props: PropsTypes) => {
-  const { isOpen, onClose, refetchCategory, onOpenChange } = props;
+  const { isOpen, onClose, refetchEvent, onOpenChange } = props;
 
   const {
     control,
     errors,
     handleSubmitForm,
-    handleAddCategory,
-    isPendingMutateAddCategory,
-    isSuccessMutateAddCategory,
-    handleUploadIcon,
+    handleAddEvent,
+    isPendingMutateAddEvent,
+    isSuccessMutateAddEvent,
+    handleUploadBanner,
     isPendingMutateUploadFile,
     preview,
-    handleDeleteIcon,
+    handleDeleteBanner,
     isPendingMutateDeleteFile,
     handleOnClose,
-  } = useAddCategoryModal();
+    dataCategory,
+    dataRegion,
+    handleSearchRegion,
+    searchRegency,
+  } = useAddEventModal();
 
   useEffect(() => {
-    if (isSuccessMutateAddCategory) {
+    if (isSuccessMutateAddEvent) {
       onClose();
-      refetchCategory();
+      refetchEvent();
     }
-  }, [isSuccessMutateAddCategory]);
+  }, [isPendingMutateAddEvent]);
 
   return (
     <Modal
@@ -54,9 +65,9 @@ const AddEventModal = (props: PropsTypes) => {
       scrollBehavior="inside"
       onClose={() => handleOnClose(onClose)}
     >
-      <form onSubmit={handleSubmitForm(handleAddCategory)}>
+      <form onSubmit={handleSubmitForm(handleAddEvent)}>
         <ModalContent className="m-4">
-          <ModalHeader>Add New Category</ModalHeader>
+          <ModalHeader>Add Event</ModalHeader>
           <ModalBody>
             <div className="flex flex-col gap-2">
               <p className="text-sm font-semibold">Information</p>
@@ -76,33 +87,179 @@ const AddEventModal = (props: PropsTypes) => {
                 )}
               />
               <Controller
-                name="description"
+                name="slug"
                 control={control}
                 render={({ field }) => (
-                  <Textarea
+                  <Input
                     {...field}
                     variant="bordered"
-                    label="Description"
+                    label="Slug"
                     type="text"
-                    isInvalid={!!errors.description}
-                    errorMessage={errors.description?.message as string}
+                    isInvalid={!!errors.slug}
+                    errorMessage={errors.slug?.message as string}
                   />
                 )}
               />
-              <p className="text-sm font-semibold">Icon</p>
               <Controller
-                name="icon"
+                name="category"
+                control={control}
+                render={({ field: { onChange, ...field } }) => (
+                  <Autocomplete
+                    {...field}
+                    defaultItems={dataCategory?.data?.data || []}
+                    variant="bordered"
+                    label="Category"
+                    type="text"
+                    isInvalid={!!errors.category}
+                    errorMessage={errors.category?.message as string}
+                    onSelectionChange={(value) => onChange(value)}
+                    placeholder="Search category here"
+                  >
+                    {(category: ICategory) => (
+                      <AutocompleteItem key={`${category._id}`}>
+                        {category.name}
+                      </AutocompleteItem>
+                    )}
+                  </Autocomplete>
+                )}
+              />
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    variant="bordered"
+                    label="Start Date"
+                    hideTimeZone
+                    showMonthAndYearPickers
+                    isInvalid={!!errors.startDate}
+                    errorMessage={errors.startDate?.message as string}
+                  />
+                )}
+              />
+              <Controller
+                name="endDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    variant="bordered"
+                    label="End Date"
+                    hideTimeZone
+                    showMonthAndYearPickers
+                    isInvalid={!!errors.endDate}
+                    errorMessage={errors.endDate?.message as string}
+                  />
+                )}
+              />
+              <Controller
+                name="isPublished"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    variant="bordered"
+                    label="Status"
+                    isInvalid={!!errors.isPublished}
+                    errorMessage={errors.isPublished?.message as string}
+                    disallowEmptySelection
+                  >
+                    <SelectItem key="true">Publish</SelectItem>
+                    <SelectItem key="false">Draft</SelectItem>
+                  </Select>
+                )}
+              />
+              <Controller
+                name="isFeatured"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    variant="bordered"
+                    label="Featured"
+                    isInvalid={!!errors.isFeatured}
+                    errorMessage={errors.isFeatured?.message as string}
+                    disallowEmptySelection
+                  >
+                    <SelectItem key="true">Yes</SelectItem>
+                    <SelectItem key="false">No</SelectItem>
+                  </Select>
+                )}
+              />
+
+              <p className="text-sm font-semibold">Location</p>
+              <div className="flex flex-col gap-2">
+                <Controller
+                  name="region"
+                  control={control}
+                  render={({ field: { onChange, ...field } }) => (
+                    <Autocomplete
+                      {...field}
+                      defaultItems={
+                        dataRegion?.data?.data && searchRegency !== ""
+                          ? dataRegion?.data?.data
+                          : []
+                      }
+                      variant="bordered"
+                      label="City"
+                      type="text"
+                      isInvalid={!!errors.region}
+                      errorMessage={errors.region?.message as string}
+                      onInputChange={(search) => handleSearchRegion(search)}
+                      onSelectionChange={(value) => onChange(value)}
+                      placeholder="Search city here"
+                    >
+                      {(regency: IRegency) => (
+                        <AutocompleteItem key={`${regency.id}`}>
+                          {regency.name}
+                        </AutocompleteItem>
+                      )}
+                    </Autocomplete>
+                  )}
+                />
+                <Controller
+                  name="latitude"
+                  control={control}
+                  render={({ field: { onChange, ...field } }) => (
+                    <Input
+                      {...field}
+                      variant="bordered"
+                      label="Latitude"
+                      isInvalid={!!errors.latitude}
+                      errorMessage={errors.latitude?.message as string}
+                    />
+                  )}
+                />
+                <Controller
+                  name="longitude"
+                  control={control}
+                  render={({ field: { onChange, ...field } }) => (
+                    <Input
+                      {...field}
+                      variant="bordered"
+                      label="longitude"
+                      isInvalid={!!errors.longitude}
+                      errorMessage={errors.longitude?.message as string}
+                    />
+                  )}
+                />
+              </div>
+
+              <p className="text-sm font-semibold">Cover</p>
+              <Controller
+                name="banner"
                 control={control}
                 render={({ field: { onChange, value, ...field } }) => (
                   <InputFile
                     isDropable
                     {...field}
-                    onUpload={(files) => handleUploadIcon(files, onChange)}
-                    onDelete={() => handleDeleteIcon(onChange)}
+                    onUpload={(files) => handleUploadBanner(files, onChange)}
+                    onDelete={() => handleDeleteBanner(onChange)}
                     isDeleting={isPendingMutateDeleteFile}
                     isUploading={isPendingMutateUploadFile}
-                    isInvalid={errors.icon !== undefined}
-                    errorMessage={errors.icon?.message}
+                    isInvalid={errors.banner !== undefined}
+                    errorMessage={errors.banner?.message}
                     preview={typeof preview === "string" ? preview : ""}
                     className="mb-2"
                   />
@@ -115,7 +272,7 @@ const AddEventModal = (props: PropsTypes) => {
               variant="bordered"
               onPress={() => handleOnClose(onClose)}
               disabled={
-                isPendingMutateAddCategory ||
+                isPendingMutateAddEvent ||
                 isPendingMutateUploadFile ||
                 isPendingMutateDeleteFile
               }
@@ -126,15 +283,15 @@ const AddEventModal = (props: PropsTypes) => {
               color="primary"
               type="submit"
               disabled={
-                isPendingMutateAddCategory ||
+                isPendingMutateAddEvent ||
                 isPendingMutateUploadFile ||
                 isPendingMutateDeleteFile
               }
             >
-              {isPendingMutateAddCategory ? (
+              {isPendingMutateAddEvent ? (
                 <Spinner size="sm" color="white" />
               ) : (
-                "Create Category"
+                "Create Event"
               )}
             </Button>
           </ModalFooter>
